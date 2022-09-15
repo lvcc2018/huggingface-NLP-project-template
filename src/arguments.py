@@ -1,5 +1,4 @@
 import argparse
-from pydoc import description
 
 
 def add_model_args(parser: argparse.ArgumentParser):
