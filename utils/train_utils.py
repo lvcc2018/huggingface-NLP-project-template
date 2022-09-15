@@ -1,4 +1,10 @@
 import numpy as np
+import sys
+import logging
+import random
+import torch
+
+from transformers import utils
 from datasets import load_metric
 
 from transformers import (
@@ -6,7 +12,6 @@ from transformers import (
     AutoModelForSequenceClassification,
     AutoModelForQuestionAnswering,
     AutoModelForTokenClassification,
-    Trainer,
     EvalPrediction
 )
 
@@ -44,3 +49,30 @@ def get_compute_metrics(metrics):
         return result
 
     return compute_metrics
+
+
+def set_logging(args, logger):
+    logging.basicConfig(
+        format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+        datefmt="%m/%d/%Y %H:%M:%S",
+        handlers=[logging.StreamHandler(sys.stdout)],
+    )
+
+    log_level = args.log_level
+    logger.setLevel(log_level)
+    utils.logging.set_verbosity(log_level)
+    utils.logging.enable_default_handler()
+    utils.logging.enable_explicit_format()
+
+    # Log on each process the small summary:
+    logger.info(f"Training configs: {args}")
+
+def set_seed(args):
+    """Set the seed for reproducibility."""
+
+    random.seed(args.seed)
+    np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
+    if torch.cuda.is_available():
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False

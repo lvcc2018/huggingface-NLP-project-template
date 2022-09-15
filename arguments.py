@@ -1,12 +1,12 @@
 import argparse
-from pydoc import describe
+from pydoc import description
 
 
 def add_model_args(parser: argparse.ArgumentParser):
     """Add arguments for model configs.
     """
     group = parser.add_argument_group(
-        title="model", describe="model configs")
+        title="model", description="model configs")
     group.add_argument('--model-name',  default=None,   type=str,
                        help='Path to pretrained teacher model or model identifier from huggingface.co/models')
     group.add_argument('--config-name', default=None,   type=str,
@@ -24,7 +24,7 @@ def add_data_args(parser: argparse.ArgumentParser):
     """Add arguments for data configs.
     """
     group = parser.add_argument_group(
-        title='data', describe="data configs")
+        title='data', description="data configs")
     group.add_argument('--dataset', default=None, type=str,
                        help='The name of the dataset to use (via the datasets library).')
     group.add_argument('--max-seq-length', default=128, type=int,
@@ -50,7 +50,7 @@ def add_data_args(parser: argparse.ArgumentParser):
 
 def add_training_args(parser: argparse.ArgumentParser):
     group = parser.add_argument_group(
-        title='training', describe='training configs')
+        title='training', description='training configs')
     group.add_argument('--model-type', default=None, type=str,
                        help="Type of model head: Sequence Classification (cls), Question Answering (qa) or Token Classification (tcls).")
     group.add_argument('--load', type=str, default=None,
@@ -59,6 +59,12 @@ def add_training_args(parser: argparse.ArgumentParser):
                        help='Output directory to save checkpoints to.')
     group.add_argument('--save-name', type=str, default=None,
                        help='Output filename to save checkpoints to.')
+    group.add_argument('--do-train', action='store_true',
+                       help='Whether to run training.')
+    group.add_argument('--do-eval', action='store_true',
+                       help='Whether to run eval on the dev set.')
+    group.add_argument('--do-predict', action='store_true',
+                       help='Whether to run predictions on the test set.')
     group.add_argument('--train-batch-size', type=int, default=32,
                        help='Data Loader batch size while training.')
     group.add_argument('--epoch-num', type=int, default=20,
@@ -73,6 +79,8 @@ def add_training_args(parser: argparse.ArgumentParser):
                        help='tensorboard log directory')
     group.add_argument('--output-dir', type=str, default=None,
                        help='output file')
+    group.add_argument('--log-level', type=str, default='passive',
+                       help="Logger log level to use on the main process. Possible choices are the log levels as strings: 'debug', 'info', 'warning', 'error' and 'critical', plus a 'passive' level which doesn't set anything and lets the application set the level.")
     return parser
 
 
@@ -80,10 +88,11 @@ def add_special_args(parser: argparse.ArgumentParser):
     """Special arguments"""
 
     group = parser.add_argument_group(
-        title='special', describe='special configurations')
-    
+        title='special', description='special configurations')
+
     # Inference configurations
-    group.add_argument_group(title='inference', describe='inference configurations')
+    group.add_argument_group(
+        title='inference', description='inference configurations')
     group.add_argument('--beam-size', type=int, default=1,
                        help='beam size')
     group.add_argument('--top-k', type=int, default=0,
