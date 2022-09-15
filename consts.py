@@ -28,17 +28,18 @@ PNG = '.png'
 
 # SPLITS
 TRAIN = "train"
-VALIDATION = "valid"
+VALID = "valid"
 TEST = "test"
 UNLABELED = "unlabeled"
 ALL = "all"
-SPLITS = [TRAIN, VALIDATION, TEST, UNLABELED]
+SPLITS = [TRAIN, VALID, TEST, UNLABELED]
 
 # MODEL TYPES
+CG = "cg"
 CLS = "cls"  # Classification
 QA = "qa"  # Question Answering
-TCLS = ""  # Token Classification
-ALL_MODEL_TYPES = [CLS, QA, TCLS]
+TCLS = "tcls"  # Token Classification
+ALL_MODEL_TYPES = [CG, CLS, QA, TCLS]
 
 # TRAINER TYPES
 STANDARD = "standard"
