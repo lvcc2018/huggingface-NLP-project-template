@@ -32,7 +32,7 @@ VALID = "valid"
 TEST = "test"
 UNLABELED = "unlabeled"
 ALL = "all"
-SPLITS = [TRAIN, VALID, TEST, UNLABELED]
+SPLITS = [TRAIN, VALID, TEST]
 
 # MODEL TYPES
 CG = "cg"

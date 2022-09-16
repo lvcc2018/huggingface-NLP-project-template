@@ -6,7 +6,6 @@ import torch
 
 from transformers import utils
 from transformers import get_linear_schedule_with_warmup
-from datasets import load_metric
 
 from transformers import (
     AutoTokenizer,
@@ -15,10 +14,8 @@ from transformers import (
     AutoModelForSequenceClassification,
     AutoModelForQuestionAnswering,
     AutoModelForTokenClassification,
-    EvalPrediction
 )
 
-from datasets import load_metric
 
 from src.consts import *
 
@@ -35,23 +32,6 @@ def get_model_obj(args):
     else:
         raise ValueError(
             f"Model type {args.model_type} is not supported. Available types are {ALL_MODEL_TYPES}")
-
-
-def get_compute_metrics(metrics):
-    # Get the metric functions
-    metrics = {metric: load_metric(metric) for metric in metrics}
-
-    # You can define your custom compute_metrics function. It takes an `EvalPrediction` object (a namedtuple with a
-    # predictions and label_ids field) and has to return a dictionary string to float.
-    def compute_metrics(p: EvalPrediction):
-        preds = p.predictions[0] if isinstance(
-            p.predictions, tuple) else p.predictions
-        preds = np.argmax(preds, axis=1)
-        result = {metric: metric_fn.compute(predictions=preds, references=p.label_ids)[
-            metric] for metric, metric_fn in metrics.items()}
-        return result
-
-    return compute_metrics
 
 
 def set_logging(args, logger):
@@ -100,8 +80,18 @@ def get_model(args):
         cache_dir=args.cache_dir)
     return model
 
+
 def get_optimizer(args, model):
     return torch.optim.AdamW(model.parameters(), lr=args.learning_rate)
 
+
 def get_learning_rate_scheduler(args, optimizer):
     return get_linear_schedule_with_warmup(optimizer)
+
+
+def set_model_and_optimizer(args):
+    tokenizer = get_tokenizer(args)
+    model = get_model(args)
+    optimizer = get_optimizer(args, model)
+    scheduler = get_learning_rate_scheduler(args, optimizer)
+    return tokenizer, model, optimizer, scheduler

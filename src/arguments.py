@@ -64,6 +64,8 @@ def add_training_args(parser: argparse.ArgumentParser):
                        help='Whether to run eval on the dev set.')
     group.add_argument('--do-predict', action='store_true',
                        help='Whether to run predictions on the test set.')
+    group.add_argument('--do-sample', action='store_true',
+                       help='Whether to sample instances on train set.')
     group.add_argument('--train-batch-size', type=int, default=32,
                        help='Data Loader batch size while training.')
     group.add_argument('--epoch-num', type=int, default=20,
